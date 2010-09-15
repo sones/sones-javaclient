@@ -1,4 +1,4 @@
-package de.sones.GraphDSClient.Result;
+package de.sones.GraphDSJavaClient.Result;
 
 
 public class SelectionResultSet implements java.util.Enumeration<DBObjectReadout> 

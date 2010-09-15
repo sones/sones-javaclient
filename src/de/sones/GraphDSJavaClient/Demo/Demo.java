@@ -1,10 +1,10 @@
-package de.sones.GraphDSClient.Demo;
+package de.sones.GraphDSJavaClient.Demo;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import de.sones.GraphDSClient.GraphDSClient;
-import de.sones.GraphDSClient.Result.QueryResult;
+import de.sones.GraphDSJavaClient.GraphDSJavaClient;
+import de.sones.GraphDSJavaClient.Result.QueryResult;
 
 public class Demo {
 	/**
@@ -12,10 +12,10 @@ public class Demo {
 	 * @throws URISyntaxException 
 	 */
 	public static void main(String[] args) throws URISyntaxException {	
-		GraphDSClient client = new GraphDSClient(new URI("http://localhost:90"),
+		GraphDSJavaClient client = new GraphDSJavaClient(new URI("http://localhost:90"),
 													"username", 
 													"password", 
-													GraphDSClient.ACCEPT_TYPE_XML);
+													GraphDSJavaClient.ACCEPT_TYPE_XML);
 		
 		QueryResult result = client.queryXML("create type user2");
 		

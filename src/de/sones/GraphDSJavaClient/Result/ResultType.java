@@ -1,4 +1,4 @@
-package de.sones.GraphDSClient.Result;
+package de.sones.GraphDSJavaClient.Result;
 
 public enum ResultType 
 {

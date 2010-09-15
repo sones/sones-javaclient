@@ -1,6 +1,6 @@
-package de.sones.GraphDSClient.Errors;
+package de.sones.GraphDSJavaClient.Errors;
 
-public interface IWarning 
+public interface IError 
 {
 	public String getMessage();
 	

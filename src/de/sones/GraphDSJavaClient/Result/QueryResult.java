@@ -1,9 +1,9 @@
-package de.sones.GraphDSClient.Result;
+package de.sones.GraphDSJavaClient.Result;
 
 import java.util.List;
 
-import de.sones.GraphDSClient.Errors.IError;
-import de.sones.GraphDSClient.Errors.IWarning;
+import de.sones.GraphDSJavaClient.Errors.IError;
+import de.sones.GraphDSJavaClient.Errors.IWarning;
 
 
 public class QueryResult 

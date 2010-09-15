@@ -1,4 +1,4 @@
-package de.sones.GraphDSClient;
+package de.sones.GraphDSJavaClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,10 +22,10 @@ import sun.misc.BASE64Encoder;
 
 import com.sun.xml.internal.ws.util.ASCIIUtility;
 
-import de.sones.GraphDSClient.Result.QueryResult;
-import de.sones.GraphDSClient.Result.ResultType;
+import de.sones.GraphDSJavaClient.Result.QueryResult;
+import de.sones.GraphDSJavaClient.Result.ResultType;
 
-public class GraphDSClient 
+public class GraphDSJavaClient 
 {
 	private String _RestURL = null;
 	
@@ -41,7 +41,7 @@ public class GraphDSClient
 	
 	public static final int ACCEPT_TYPE_TEXT = 2;
 	
-	public GraphDSClient(URI myUri, String myUserName, String myPassword, int myDocumentType)
+	public GraphDSJavaClient(URI myUri, String myUserName, String myPassword, int myDocumentType)
 	{
 		_RestURL = myUri.toString() + "/gql?";
 		
