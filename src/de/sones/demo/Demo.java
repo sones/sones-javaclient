@@ -17,10 +17,11 @@ public class Demo {
 													"password", 
 													GraphDSClient.ACCEPT_TYPE_XML);
 		
-		QueryResult resultString = client.queryXML("create type user");
+		QueryResult result = client.queryXML("create type user2");
 		
-		System.out.println(resultString);
 		
+		System.out.println("QueryString:\t" + result.getQueryString());
+		System.out.println("ResultType:\t" + result.getResultType());
+		System.out.println("Duration:\t" + result.getDuration());
 	}
-
 }
