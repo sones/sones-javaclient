@@ -1,4 +1,4 @@
-package de.sones.GraphDBRESTClient.Result;
+package de.sones.GraphDSClient.Result;
 
 public enum ResultType 
 {

@@ -1,4 +1,4 @@
-package de.sones.GraphDBRESTClient.Errors;
+package de.sones.GraphDSClient.Errors;
 
 public interface IWarning 
 {

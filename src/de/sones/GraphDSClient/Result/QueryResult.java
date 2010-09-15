@@ -1,9 +1,9 @@
-package de.sones.GraphDBRESTClient.Result;
+package de.sones.GraphDSClient.Result;
 
 import java.util.List;
 
-import de.sones.GraphDBRESTClient.Errors.IError;
-import de.sones.GraphDBRESTClient.Errors.IWarning;
+import de.sones.GraphDSClient.Errors.IError;
+import de.sones.GraphDSClient.Errors.IWarning;
 
 
 public class QueryResult 

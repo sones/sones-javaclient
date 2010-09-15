@@ -1,10 +1,10 @@
-package de.sones.demo;
+package de.sones.GraphDSClient.Demo;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import de.sones.GraphDBRESTClient.GraphDSClient;
-import de.sones.GraphDBRESTClient.Result.QueryResult;
+import de.sones.GraphDSClient.GraphDSClient;
+import de.sones.GraphDSClient.Result.QueryResult;
 
 public class Demo {
 	/**

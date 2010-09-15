@@ -1,4 +1,4 @@
-package de.sones.GraphDBRESTClient;
+package de.sones.GraphDSClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,8 +22,8 @@ import sun.misc.BASE64Encoder;
 
 import com.sun.xml.internal.ws.util.ASCIIUtility;
 
-import de.sones.GraphDBRESTClient.Result.QueryResult;
-import de.sones.GraphDBRESTClient.Result.ResultType;
+import de.sones.GraphDSClient.Result.QueryResult;
+import de.sones.GraphDSClient.Result.ResultType;
 
 public class GraphDSClient 
 {
