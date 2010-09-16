@@ -8,12 +8,15 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -22,6 +25,10 @@ import sun.misc.BASE64Encoder;
 
 import com.sun.xml.internal.ws.util.ASCIIUtility;
 
+import de.sones.GraphDSJavaClient.Errors.IError;
+import de.sones.GraphDSJavaClient.Errors.IWarning;
+import de.sones.GraphDSJavaClient.Errors.UnspecifiedError;
+import de.sones.GraphDSJavaClient.Errors.UnspecifiedWarning;
 import de.sones.GraphDSJavaClient.Result.QueryResult;
 import de.sones.GraphDSJavaClient.Result.ResultType;
 
@@ -56,6 +63,8 @@ public class GraphDSJavaClient
 	{			
 		String responseString = getResponseString(myQuery);
 		
+		System.out.println(responseString);
+		
 		/**
 		 * parse the response-string
 		 */
@@ -84,25 +93,49 @@ public class GraphDSJavaClient
 		}
 		
 		/**
-		 * build query result
+		 * Build query result.
+		 * 
+		 * 1) Data
 		 */
+		String queryString 		= null;
+		ResultType queryResult 	= null;
+		long queryDuration		= 0L;
 		
+		ArrayList<IWarning> queryWarnings 	= null;
+		ArrayList<IError> queryErrors 		= null;
+				
 		/**
-		 * QueryResult
+		 * 2) Meta
 		 */
 		NodeList queryResultChildNodes = xmlDoc.getElementsByTagName("queryresult").item(0).getChildNodes();
 		//query string				
-		String queryString = queryResultChildNodes.item(0).getFirstChild().getNodeValue();
+		queryString = queryResultChildNodes.item(0).getFirstChild().getNodeValue();
 		//query result
-		ResultType queryResult = Enum.valueOf(ResultType.class, queryResultChildNodes.item(1).getFirstChild().getNodeValue());		
+		queryResult = Enum.valueOf(ResultType.class, queryResultChildNodes.item(1).getFirstChild().getNodeValue());		
 		//duration
-		long queryDuration = Long.parseLong(queryResultChildNodes.item(2).getFirstChild().getNodeValue());			
+		queryDuration = Long.parseLong(queryResultChildNodes.item(2).getFirstChild().getNodeValue());			
 		
 		/**
-		 * Warnings
+		 * 3) Warnings
 		 */
+		NodeList warningsNode = xmlDoc.getElementsByTagName("warnings").item(0).getChildNodes();
 		
-		return new QueryResult(null, null, queryString, queryResult, queryDuration);
+		if(warningsNode != null)
+		{
+			queryWarnings = readWarnings(warningsNode);
+		}
+
+		/**
+		 * 4) Errors
+		 */
+		NodeList errorsNode = xmlDoc.getElementsByTagName("errors").item(0).getChildNodes();				 
+		
+		if(errorsNode != null)
+		{
+			queryErrors = readErrors(errorsNode);
+		}
+				
+		return new QueryResult(queryWarnings, queryErrors, queryString, queryResult, queryDuration);
 	}
 	
 	private String getResponseString(String myQuery) 
@@ -177,5 +210,57 @@ public class GraphDSJavaClient
 		{		
 			connection.disconnect();
 		}
+	}
+
+	private ArrayList<IWarning> readWarnings(NodeList myWarnings)
+	{
+		String id 						= null;
+		String message 					= null;
+		NamedNodeMap tmpNodeMap 		= null;
+		Node tmpNode 				 	= null;
+		ArrayList<IWarning> warnings 	= new ArrayList<IWarning>();
+		
+		for (int i = 0; i < myWarnings.getLength(); i++) 
+		{		
+			tmpNode = myWarnings.item(i);
+			//read warning ID (the attribute "node" in the warning tag)
+			if((tmpNodeMap = tmpNode.getAttributes()) != null)
+			{
+				id = (tmpNodeMap.getNamedItem("code") != null) ? tmpNodeMap.getNamedItem("code").getNodeValue() : "0";
+			}
+			//read warning message (the text in the warning tag)
+			message = tmpNode.getFirstChild().getNodeValue();
+			
+			//add to the warnings list
+			warnings.add(new UnspecifiedWarning(id, message));
+		}
+		
+		return warnings;
+	}
+	
+	private ArrayList<IError> readErrors(NodeList myErrors)
+	{
+		String id 						= null;
+		String message 					= null;
+		NamedNodeMap tmpNodeMap 		= null;
+		Node tmpNode 				 	= null;
+		ArrayList<IError> errors 		= new ArrayList<IError>();
+		
+		for (int i = 0; i < myErrors.getLength(); i++) 
+		{		
+			tmpNode = myErrors.item(i);
+			//read warning ID (the attribute "node" in the warning tag)
+			if((tmpNodeMap = tmpNode.getAttributes()) != null)
+			{
+				id = (tmpNodeMap.getNamedItem("code") != null) ? tmpNodeMap.getNamedItem("code").getNodeValue() : "0";
+			}
+			//read warning message (the text in the warning tag)
+			message = tmpNode.getFirstChild().getNodeValue();
+			
+			//add to the warnings list
+			errors.add(new UnspecifiedError(id, message));
+		}
+		
+		return errors;
 	}
 }

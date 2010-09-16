@@ -51,7 +51,7 @@ public class QueryResult
 	/**
 	 * Constructors
 	 */
-	public QueryResult(List<IError> myErrors, List<IWarning> myWarnings, String myQueryString, ResultType myResultType, long myDuration)
+	public QueryResult(List<IWarning> myWarnings, List<IError> myErrors, String myQueryString, ResultType myResultType, long myDuration)
 	{
 		_Errors = myErrors;
 		_Warnings = myWarnings;
