@@ -9,14 +9,12 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.DateFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import javax.smartcardio.ATR;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -314,10 +312,12 @@ public class GraphDSJavaClient
 			if("attribute".equals(tmpNodeName))
 			{
 				readAttributes(tmpNode, payLoad);
-			} else if ("edge".equals(tmpNodeName))
+			} 
+			else if ("edge".equals(tmpNodeName))
 			{
 				
-			} else if("edgelabel".equals(tmpNodeName))
+			} 
+			else if("edgelabel".equals(tmpNodeName))
 			{
 				
 			}			
@@ -384,7 +384,7 @@ public class GraphDSJavaClient
 		else if("ObjectRevisionID".equals(myAttributeType))
 		{
 			return new ObjectRevisionID(myAttributeValue);
-		} 
+		} 		
 		else
 		{
 			return myAttributeValue;
