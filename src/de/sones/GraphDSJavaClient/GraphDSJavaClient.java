@@ -8,8 +8,15 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
+import javax.smartcardio.ATR;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,6 +32,9 @@ import sun.misc.BASE64Encoder;
 
 import com.sun.xml.internal.ws.util.ASCIIUtility;
 
+import de.sones.GraphDSJavaClient.API.Vertex;
+import de.sones.GraphDSJavaClient.DataStructures.ObjectRevisionID;
+import de.sones.GraphDSJavaClient.DataStructures.ObjectUUID;
 import de.sones.GraphDSJavaClient.Errors.IError;
 import de.sones.GraphDSJavaClient.Errors.IWarning;
 import de.sones.GraphDSJavaClient.Errors.UnspecifiedError;
@@ -103,6 +113,8 @@ public class GraphDSJavaClient
 		
 		ArrayList<IWarning> queryWarnings 	= null;
 		ArrayList<IError> queryErrors 		= null;
+		
+		ArrayList<Vertex> queryVertices = null;
 				
 		/**
 		 * 2) Meta
@@ -138,8 +150,12 @@ public class GraphDSJavaClient
 		/**
 		 * 5) Results
 		 */
-		NodeList resultNodes = xmlDoc.getElementsByTagName("results").item(0).getChildNodes();
-		System.out.println(resultNodes.getLength());
+		Node resultsNode = xmlDoc.getElementsByTagName("results").item(0);
+		
+		if(resultsNode != null)
+		{
+			queryVertices = readVertices(resultsNode);
+		}
 		
 		return new QueryResult(queryWarnings, queryErrors, queryString, queryResult, queryDuration);
 	}
@@ -268,5 +284,110 @@ public class GraphDSJavaClient
 		}
 		
 		return errors;
+	}
+
+	private ArrayList<Vertex> readVertices(Node myNode)
+	{
+		ArrayList<Vertex> vertices = new ArrayList<Vertex>();
+		NodeList children = myNode.getChildNodes();
+		
+		for (int i = 0; i < children.getLength(); i++) 
+		{
+			vertices.add(readVertex(children.item(i)));
+		}
+		
+		return vertices;
+	}
+	
+	private Vertex readVertex(Node myVertexNode)
+	{				
+		NodeList children = myVertexNode.getChildNodes();
+		Node tmpNode = null;
+		String tmpNodeName = null;
+		HashMap<String, Object> payLoad = new HashMap<String, Object>();		
+		
+		for (int i = 0; i < children.getLength(); i++) 
+		{
+			tmpNode = children.item(i);
+			tmpNodeName = tmpNode.getNodeName();
+								
+			if("attribute".equals(tmpNodeName))
+			{
+				readAttributes(tmpNode, payLoad);
+			} else if ("edge".equals(tmpNodeName))
+			{
+				
+			} else if("edgelabel".equals(tmpNodeName))
+			{
+				
+			}			
+		}
+		
+		return new Vertex();
+	}
+	
+	private void readAttributes(Node myAttributeNode, HashMap<String, Object> myPayLoad)
+	{
+		String attributeType;
+		String attributeName;
+		String attributeValue;
+		
+		NamedNodeMap attributes = myAttributeNode.getAttributes();
+		
+		attributeName = attributes.getNamedItem("name").getNodeValue();
+		attributeType = attributes.getNamedItem("type").getNodeValue();
+		attributeValue = myAttributeNode.getFirstChild().getNodeValue();
+				
+		myPayLoad.put(attributeName, parseAttribute(attributeType, attributeValue));		
+	}
+	
+	private Object parseAttribute(String myAttributeType, String myAttributeValue)
+	{
+		if("Double".equals(myAttributeType))
+		{
+			return Double.parseDouble(myAttributeValue);
+		} 
+		else if("Int64".equals(myAttributeType))
+		{
+			return Long.parseLong(myAttributeValue);
+		} 
+		else if("Int32".equals(myAttributeType))
+		{
+			return Integer.parseInt(myAttributeValue);
+		} 
+		else if("UInt64".equals(myAttributeType))
+		{
+			return Long.parseLong(myAttributeValue);
+		} 
+		else if("DateTime".equals(myAttributeType))
+		{
+			DateFormat formatter = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");			
+			Date date = null;
+			
+			try
+			{
+				date = formatter.parse(myAttributeValue);
+			} catch(ParseException ex)
+			{
+				return new Date();
+			}
+			return date;
+		} 
+		else if("Boolean".equals(myAttributeType))
+		{
+			return Boolean.parseBoolean(myAttributeValue);
+		} 
+		else if("ObjectUUID".equals(myAttributeType))
+		{
+			return new ObjectUUID(myAttributeValue);
+		} 
+		else if("ObjectRevisionID".equals(myAttributeType))
+		{
+			return new ObjectRevisionID(myAttributeValue);
+		} 
+		else
+		{
+			return myAttributeValue;
+		}				
 	}
 }

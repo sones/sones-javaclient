@@ -1,1 +1,5 @@
 GraphDSJavaClient
+
+Information
+
+- BasisType UInt64 not support, values are parsed as Int64 (Long)

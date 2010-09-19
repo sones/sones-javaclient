@@ -28,27 +28,28 @@ public class Demo {
 		 * demo
 		 */
 		
-//		/**
-//		 * 1) Create a type user with the following attributes:
-//		 * 
-//		 * - the user's name (String)
-//		 * - the age of the user (Integer)
-//		 * - a list of it's favourite double numbers (oO) (List<Double>)
-//		 * - it's friends who are also users (List<User>)
-//		 */
+		/**
+		 * 1) Create a type user with the following attributes:
+		 * 
+		 * - the user's name (String)
+		 * - the age of the user (Integer)
+		 * - the creation date (Date)
+		 * - a list of it's favourite double numbers (oO) (List<Double>)
+		 * - it's friends who are also users (List<User>)
+		 */
 //		result = client.queryXML(
-//				"CREATE TYPE User ATTRIBUTES ( String Name, Integer Age, LIST<Double> FavouriteNumbers, SET<User> Friends )");		
+//				"CREATE TYPE User ATTRIBUTES ( String Name, Integer Age, DateTime creationDate, LIST<Double> FavouriteNumbers, SET<User> Friends )");		
 //		printQueryResult(result);
-//		
+		
 //		/**
 //		 * 2) Insert some users.
 //		 */
 //		result = client.queryXML(
-//				"INSERT INTO User VALUES (Name='Alice', Age=23, FavouriteNumbers = LISTOF(1, 2, 3.141592, 4))");
+//				"INSERT INTO User VALUES (Name='Alice', Age=23, creationDate='31/12/2009 10:05', FavouriteNumbers = LISTOF(1, 2, 3.141592, 4))");
 //		printQueryResult(result);
 //		
 //		result = client.queryXML(
-//				"INSERT INTO User VALUES (Name='Bob', Age=42, FavouriteNumbers = LISTOF(1, 2.7182818, 3, 4))");
+//				"INSERT INTO User VALUES (Name='Bob', Age=42, creationDate='31/12/2009 10:05', FavouriteNumbers = LISTOF(1, 2.7182818, 3, 4))");
 //		printQueryResult(result);
 		
 		/**
