@@ -118,23 +118,29 @@ public class GraphDSJavaClient
 		/**
 		 * 3) Warnings
 		 */
-		NodeList warningsNode = xmlDoc.getElementsByTagName("warnings").item(0).getChildNodes();
+		NodeList warningNodes = xmlDoc.getElementsByTagName("warnings").item(0).getChildNodes();
 		
-		if(warningsNode != null)
+		if(warningNodes != null)
 		{
-			queryWarnings = readWarnings(warningsNode);
+			queryWarnings = readWarnings(warningNodes);
 		}
 
 		/**
 		 * 4) Errors
 		 */
-		NodeList errorsNode = xmlDoc.getElementsByTagName("errors").item(0).getChildNodes();				 
+		NodeList errorNodes = xmlDoc.getElementsByTagName("errors").item(0).getChildNodes();				 
 		
-		if(errorsNode != null)
+		if(errorNodes != null)
 		{
-			queryErrors = readErrors(errorsNode);
+			queryErrors = readErrors(errorNodes);
 		}
-				
+		
+		/**
+		 * 5) Results
+		 */
+		NodeList resultNodes = xmlDoc.getElementsByTagName("results").item(0).getChildNodes();
+		System.out.println(resultNodes.getLength());
+		
 		return new QueryResult(queryWarnings, queryErrors, queryString, queryResult, queryDuration);
 	}
 	
