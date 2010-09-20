@@ -1,6 +1,7 @@
 package de.sones.GraphDSJavaClient.API;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import de.sones.GraphDSJavaClient.DataStructures.ObjectRevisionID;
 import de.sones.GraphDSJavaClient.DataStructures.ObjectUUID;
@@ -14,7 +15,7 @@ public class DBObject
 	/**
 	 * holds all attributes of the DBObject
 	 */
-	protected HashMap<String, Object> _Attributes;
+	protected Map<String, Object> _Attributes;
 	
 	/*
 	 * Constructors

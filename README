@@ -2,7 +2,7 @@ GraphDSJavaClient
 
 Missing functionality
 
-- BasicType UInt64 not support, values are parsed as Int64 (Long)
+- BasicType UInt64 not supported, appropriate values are parsed as Int64 (Long)
 
 IVertex
 	- anonymous functions

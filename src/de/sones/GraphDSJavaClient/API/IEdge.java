@@ -27,7 +27,7 @@ public interface IEdge
 	void setUUID(ObjectUUID myObjectUUID);
 	void setTYPE(String myType);
 	void setEDITION(String myEdition);
-	void setREVISTIONID(ObjectRevisionID myObjectRevisionID);
+	void setREVISIONID(ObjectRevisionID myObjectRevisionID);
 	void setComment(String myComment);
 	void setEdgeTypeName(String myEdgeTypeName);
 	

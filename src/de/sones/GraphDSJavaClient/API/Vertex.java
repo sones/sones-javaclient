@@ -1,6 +1,6 @@
 package de.sones.GraphDSJavaClient.API;
 
-import java.util.HashMap;
+import java.util.Map;
 
 
 public class Vertex extends DBObject implements IVertex
@@ -13,7 +13,7 @@ public class Vertex extends DBObject implements IVertex
 	{		
 	}
 	
-	public Vertex(HashMap<String, Object> myAttributes)
+	public Vertex(Map<String, Object> myAttributes)
 	{
 		if(myAttributes != null)
 		{

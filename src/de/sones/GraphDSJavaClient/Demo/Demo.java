@@ -40,7 +40,7 @@ public class Demo {
 //		result = client.queryXML(
 //				"CREATE TYPE User ATTRIBUTES ( String Name, Integer Age, DateTime creationDate, LIST<Double> FavouriteNumbers, SET<User> Friends )");		
 //		printQueryResult(result);
-		
+//		
 //		/**
 //		 * 2) Insert some users.
 //		 */
