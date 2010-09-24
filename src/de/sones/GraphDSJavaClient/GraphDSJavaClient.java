@@ -14,22 +14,20 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
 
 import sun.misc.BASE64Encoder;
 
 import com.sun.xml.internal.ws.util.ASCIIUtility;
 
+import de.sones.GraphDSJavaClient.API.Edge;
+import de.sones.GraphDSJavaClient.API.IVertex;
 import de.sones.GraphDSJavaClient.API.Vertex;
 import de.sones.GraphDSJavaClient.DataStructures.ObjectRevisionID;
 import de.sones.GraphDSJavaClient.DataStructures.ObjectUUID;
@@ -79,21 +77,15 @@ public class GraphDSJavaClient
 		Document xmlDoc = null;
 		
 		try
+		{								
+			xmlDoc = new SAXBuilder().build(new StringReader(responseString));			
+		} catch (JDOMException e)
 		{
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();			
-			xmlDoc = builder.parse(new InputSource(new StringReader(responseString)));
+			
 		} catch(IOException ioEx)
 		{
 			
-		} catch(ParserConfigurationException pcEx)
-		{
-			
-		}
-		catch(SAXException saxEx)
-		{
-			
-		}
+		}		
 		
 		if(xmlDoc == null)
 		{
@@ -109,53 +101,54 @@ public class GraphDSJavaClient
 		ResultType queryResult 	= null;
 		long queryDuration		= 0L;
 		
-		ArrayList<IWarning> queryWarnings 	= null;
-		ArrayList<IError> queryErrors 		= null;
+		List<IWarning> queryWarnings 	= null;
+		List<IError> queryErrors 		= null;
 		
-		ArrayList<Vertex> queryVertices = null;
+		List<IVertex> queryVertices = null;
 				
 		/**
 		 * 2) Meta
-		 */
-		NodeList queryResultChildNodes = xmlDoc.getElementsByTagName("queryresult").item(0).getChildNodes();
+		 */						
+		Element queryResultNode = xmlDoc.getRootElement().getChild("graphdb").getChild("queryresult");
 		//query string				
-		queryString = queryResultChildNodes.item(0).getFirstChild().getNodeValue();
+		queryString = queryResultNode.getChildText("query");
 		//query result
-		queryResult = Enum.valueOf(ResultType.class, queryResultChildNodes.item(1).getFirstChild().getNodeValue());		
+		queryResult = Enum.valueOf(ResultType.class, queryResultNode.getChildText("result"));		
 		//duration
-		queryDuration = Long.parseLong(queryResultChildNodes.item(2).getFirstChild().getNodeValue());			
+		queryDuration = Long.parseLong(queryResultNode.getChildText("duration"));			
 		
 		/**
 		 * 3) Warnings
 		 */
-		NodeList warningNodes = xmlDoc.getElementsByTagName("warnings").item(0).getChildNodes();
+		Element warningsNode = queryResultNode.getChild("warnings");		
 		
-		if(warningNodes != null)
+		if(warningsNode != null)
 		{
-			queryWarnings = readWarnings(warningNodes);
+			queryWarnings = readWarnings(warningsNode);
 		}
 
 		/**
 		 * 4) Errors
 		 */
-		NodeList errorNodes = xmlDoc.getElementsByTagName("errors").item(0).getChildNodes();				 
+		Element errorsNode = queryResultNode.getChild("errors");				 
 		
-		if(errorNodes != null)
+		if(errorsNode != null)
 		{
-			queryErrors = readErrors(errorNodes);
+			queryErrors = readErrors(errorsNode);
 		}
 		
 		/**
 		 * 5) Results
 		 */
-		Node resultsNode = xmlDoc.getElementsByTagName("results").item(0);
+		Element resultsNode = queryResultNode.getChild("results");
 		
 		if(resultsNode != null)
 		{
-			queryVertices = readVertices(resultsNode);
+			queryVertices = readVertices(resultsNode);			
 		}
 		
-		return new QueryResult(queryWarnings, queryErrors, queryString, queryResult, queryDuration);
+		
+		return new QueryResult(queryVertices, queryWarnings, queryErrors, queryString, queryResult, queryDuration);
 	}
 	
 	private String getResponseString(String myQuery) 
@@ -232,113 +225,132 @@ public class GraphDSJavaClient
 		}
 	}
 
-	private ArrayList<IWarning> readWarnings(NodeList myWarnings)
+	private ArrayList<IWarning> readWarnings(Element myWarningsNode)
 	{
 		String id 						= null;
-		String message 					= null;
-		NamedNodeMap tmpNodeMap 		= null;
-		Node tmpNode 				 	= null;
+		String message 					= null;	
+		Element tmpNode 				= null;
 		ArrayList<IWarning> warnings 	= new ArrayList<IWarning>();
-		
-		for (int i = 0; i < myWarnings.getLength(); i++) 
-		{		
-			tmpNode = myWarnings.item(i);
+				
+		for (Object warning : myWarningsNode.getChildren()) 
+		{
+			tmpNode = (Element) warning;
+			
 			//read warning ID (the attribute "node" in the warning tag)
-			if((tmpNodeMap = tmpNode.getAttributes()) != null)
+			id = tmpNode.getAttributeValue("code");			
+			if(id == null)
 			{
-				id = (tmpNodeMap.getNamedItem("code") != null) ? tmpNodeMap.getNamedItem("code").getNodeValue() : "0";
+				id = "0";
 			}
+			
 			//read warning message (the text in the warning tag)
-			message = tmpNode.getFirstChild().getNodeValue();
+			message = tmpNode.getText();
 			
 			//add to the warnings list
 			warnings.add(new UnspecifiedWarning(id, message));
-		}
+		}				
 		
 		return warnings;
 	}
 	
-	private ArrayList<IError> readErrors(NodeList myErrors)
+	private ArrayList<IError> readErrors(Element myErrorsNode)
 	{
 		String id 						= null;
-		String message 					= null;
-		NamedNodeMap tmpNodeMap 		= null;
-		Node tmpNode 				 	= null;
+		String message 					= null;		
+		Element tmpNode 				= null;
 		ArrayList<IError> errors 		= new ArrayList<IError>();
 		
-		for (int i = 0; i < myErrors.getLength(); i++) 
-		{		
-			tmpNode = myErrors.item(i);
-			//read warning ID (the attribute "node" in the warning tag)
-			if((tmpNodeMap = tmpNode.getAttributes()) != null)
+		for (Object error : myErrorsNode.getChildren()) 
+		{
+			tmpNode = (Element) error;
+			
+			//read error ID (the attribute "node" in the error tag)
+			id = tmpNode.getAttributeValue("code");			
+			if(id == null)
 			{
-				id = (tmpNodeMap.getNamedItem("code") != null) ? tmpNodeMap.getNamedItem("code").getNodeValue() : "0";
+				id = "0";
 			}
-			//read warning message (the text in the warning tag)
-			message = tmpNode.getFirstChild().getNodeValue();
+			
+			//read error message (the text in the error tag)
+			message = tmpNode.getText();
 			
 			//add to the warnings list
 			errors.add(new UnspecifiedError(id, message));
-		}
+		}			
 		
 		return errors;
 	}
 
-	private ArrayList<Vertex> readVertices(Node myNode)
+	private List<IVertex> readVertices(Element myResultsNode)
 	{
-		ArrayList<Vertex> vertices = new ArrayList<Vertex>();
-		NodeList children = myNode.getChildNodes();
+		List<IVertex> vertices = new ArrayList<IVertex>();		
 		
-		for (int i = 0; i < children.getLength(); i++) 
+		for (Object vertex : myResultsNode.getChildren()) 
 		{
-			vertices.add(readVertex(children.item(i)));
+			vertices.add(readVertex((Element) vertex));
 		}
-		
+				
 		return vertices;
 	}
 	
-	private Vertex readVertex(Node myVertexNode)
-	{				
-		NodeList children = myVertexNode.getChildNodes();
-		Node tmpNode = null;
-		String tmpNodeName = null;
-		HashMap<String, Object> payLoad = new HashMap<String, Object>();		
-		
-		for (int i = 0; i < children.getLength(); i++) 
-		{
-			tmpNode = children.item(i);
-			tmpNodeName = tmpNode.getNodeName();
-								
-			if("attribute".equals(tmpNodeName))
-			{
-				readAttributes(tmpNode, payLoad);
-			} 
-			else if ("edge".equals(tmpNodeName))
-			{
-				
-			} 
-			else if("edgelabel".equals(tmpNodeName))
-			{
-				
-			}			
-		}
-		
-		return new Vertex();
-	}
-	
-	private void readAttributes(Node myAttributeNode, HashMap<String, Object> myPayLoad)
-	{
+	private IVertex readVertex(Element myVertexNode)
+	{						
+		Element tmpNode = null;		
+		Map<String, Object> payLoad = new HashMap<String, Object>();		
+						
+		/*
+		 * attributes
+		 */
 		String attributeType;
 		String attributeName;
 		String attributeValue;
 		
-		NamedNodeMap attributes = myAttributeNode.getAttributes();
+		for (Object attribute : myVertexNode.getChildren("attribute")) 
+		{
+			tmpNode = (Element) attribute;
+			attributeName = tmpNode.getAttributeValue("name");
+			attributeType = tmpNode.getAttributeValue("type");
+			attributeValue = tmpNode.getValue();
+			
+			payLoad.put(attributeName, parseAttribute(attributeType, attributeValue));
+		}
 		
-		attributeName = attributes.getNamedItem("name").getNodeValue();
-		attributeType = attributes.getNamedItem("type").getNodeValue();
-		attributeValue = myAttributeNode.getFirstChild().getNodeValue();
-				
-		myPayLoad.put(attributeName, parseAttribute(attributeType, attributeValue));		
+		/*
+		 * edges
+		 */
+		Edge tmpEdge;
+		String edgeName;
+		
+		for (Object edge : myVertexNode.getChildren("edge")) 
+		{
+			tmpNode = (Element) edge;
+			
+			edgeName = tmpNode.getAttributeValue("name");						
+			tmpNode.getChild("hyperedgelabel");
+			tmpNode.getChildren("vertex");
+			Iterable<IVertex> targetVertices = generateEdgeContent(
+					tmpNode.getChild("hyperedgelabel"),
+					tmpNode.getChildren("vertex"));
+			tmpEdge = new Edge(null, targetVertices, null);
+			tmpEdge.setEdgeTypeName(tmpNode.getAttributeValue("type"));
+			
+			payLoad.put(edgeName, tmpEdge);
+		}
+		
+		return new Vertex(payLoad);
+	}			
+	
+	private Iterable<IVertex> generateEdgeContent(Element myHyperEdgeElement, List<?> myTargetVerticeNodes)
+	{
+		List<IVertex> targetVertices = new ArrayList<IVertex>();
+		
+		//do some recursive work through the result graph
+		for(Object targetVerticeNode : myTargetVerticeNodes)
+		{
+			targetVertices.add(readVertex((Element)targetVerticeNode));
+		}
+		
+		return targetVertices;
 	}
 	
 	private Object parseAttribute(String myAttributeType, String myAttributeValue)

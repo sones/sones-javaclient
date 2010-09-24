@@ -1,5 +1,7 @@
 package de.sones.GraphDSJavaClient.API;
 
+import java.util.Map;
+
 import de.sones.GraphDSJavaClient.DataStructures.ObjectRevisionID;
 import de.sones.GraphDSJavaClient.DataStructures.ObjectUUID;
 
@@ -14,6 +16,8 @@ public interface IVertex
 	String 				getEDITION();
 	ObjectRevisionID 	getREVISIONID();
 	String 				getComment();
+	
+	Map<String, Object> getAttributes();
 	
 	/*
 	 * setter

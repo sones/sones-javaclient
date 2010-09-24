@@ -1,5 +1,6 @@
 package de.sones.GraphDSJavaClient.DataStructures;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 public class ObjectUUID
@@ -42,5 +43,18 @@ public class ObjectUUID
 	public byte[] getByteArray()
 	{
 		return _UUID;
+	}
+	
+	@Override
+	public String toString()
+	{		
+		try 
+		{
+			return new String(_UUID, "UTF-8");
+		} 
+		catch (UnsupportedEncodingException e) 
+		{
+			return new String(_UUID);
+		}
 	}
 }

@@ -2,6 +2,7 @@ package de.sones.GraphDSJavaClient.Result;
 
 import java.util.List;
 
+import de.sones.GraphDSJavaClient.API.IVertex;
 import de.sones.GraphDSJavaClient.Errors.IError;
 import de.sones.GraphDSJavaClient.Errors.IWarning;
 
@@ -22,6 +23,8 @@ public class QueryResult
 	
 	private List<IWarning> _Warnings;
 	
+	private List<IVertex> _Vertices;
+	
 	/**
 	 * getter / setter
 	 */
@@ -40,24 +43,38 @@ public class QueryResult
 		return _Warnings;
 	}
 
-	public String getQueryString() {
+	public String getQueryString() 
+	{
 		return _QueryString;
 	}	
 
-	public long getDuration() {
+	public long getDuration() 
+	{
 		return _Duration;
+	}
+	
+	public List<IVertex> getVertices()
+	{
+		return _Vertices;
+	}
+	
+	public void setVertices(List<IVertex> myVertices)
+	{
+		_Vertices = myVertices;
 	}
 
 	/**
 	 * Constructors
 	 */
-	public QueryResult(List<IWarning> myWarnings, List<IError> myErrors, String myQueryString, ResultType myResultType, long myDuration)
+	public QueryResult(List<IVertex> myVertices, List<IWarning> myWarnings, List<IError> myErrors, String myQueryString, ResultType myResultType, long myDuration)
 	{
-		_Errors = myErrors;
-		_Warnings = myWarnings;
+		_Vertices 		= myVertices;
 		
-		_QueryString = myQueryString;
-		_ResultType = myResultType;
-		_Duration = myDuration;	
+		_Errors 		= myErrors;
+		_Warnings 		= myWarnings;
+		
+		_QueryString 	= myQueryString;
+		_ResultType 	= myResultType;
+		_Duration 		= myDuration;	
 	}
 }

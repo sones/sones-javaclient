@@ -34,6 +34,17 @@ public class DBObject
 	 */
 		
 	/**
+	 * Returns all attributes of that DBObject
+	 * 
+	 * @return a map <String, Object> of all attributes
+	 */
+	public Map<String, Object> getAttributes()
+	{
+		return _Attributes;
+	}
+	
+	
+	/**
 	 * Returns the ObjectUUID for that DBObject.
 	 * 
 	 * @return ObjectUUID or null if no uuid is assigned.
