@@ -137,6 +137,9 @@ public class Demo
 	{	
 		/**
 		 * init
+		 *  
+		 * These are the default credentials and port used by the demo instance in GraphDB open source version.
+		 * (see http://github.com/sones/sones for sones GraphDB - enterprise graph database management system)
 		 */
 		GraphDSJavaClient client = new GraphDSJavaClient(new URI("http://localhost:90"),
 													"username", 
