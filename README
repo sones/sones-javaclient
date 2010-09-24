@@ -1,10 +1,14 @@
 GraphDSJavaClient
 
-Missing functionality
+Missing functionality:
 
-- BasicType UInt64 not supported, appropriate values are parsed as Int64 (Long)
+	General
+		- BasicType UInt64 not supported, appropriate values are parsed as Int64 (Long)
 
-IVertex
-	- anonymous functions
-	- traverse methods
-	- link/unlink
+	IVertex
+		- anonymous functions
+		- traverse methods
+		- link/unlink
+	
+	GraphDSClient
+		- QueryResultActions

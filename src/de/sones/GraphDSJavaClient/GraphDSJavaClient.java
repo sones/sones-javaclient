@@ -29,6 +29,8 @@ import com.sun.xml.internal.ws.util.ASCIIUtility;
 import de.sones.GraphDSJavaClient.API.Edge;
 import de.sones.GraphDSJavaClient.API.IVertex;
 import de.sones.GraphDSJavaClient.API.Vertex;
+import de.sones.GraphDSJavaClient.API.VertexGroup;
+import de.sones.GraphDSJavaClient.API.VertexWeightedEdges;
 import de.sones.GraphDSJavaClient.DataStructures.ObjectRevisionID;
 import de.sones.GraphDSJavaClient.DataStructures.ObjectUUID;
 import de.sones.GraphDSJavaClient.Errors.IError;
@@ -67,7 +69,7 @@ public class GraphDSJavaClient
 
 	public QueryResult queryXML(String myQuery)
 	{			
-		String responseString = getResponseString(myQuery);
+		String responseString = getResponseString(myQuery);				
 		
 		System.out.println(responseString);
 		
@@ -146,8 +148,7 @@ public class GraphDSJavaClient
 		{
 			queryVertices = readVertices(resultsNode);			
 		}
-		
-		
+				
 		return new QueryResult(queryVertices, queryWarnings, queryErrors, queryString, queryResult, queryDuration);
 	}
 	
@@ -298,7 +299,7 @@ public class GraphDSJavaClient
 		Element tmpNode = null;		
 		Map<String, Object> payLoad = new HashMap<String, Object>();		
 						
-		/*
+		/**
 		 * attributes
 		 */
 		String attributeType;
@@ -315,7 +316,7 @@ public class GraphDSJavaClient
 			payLoad.put(attributeName, parseAttribute(attributeType, attributeValue));
 		}
 		
-		/*
+		/**
 		 * edges
 		 */
 		Edge tmpEdge;
@@ -337,6 +338,28 @@ public class GraphDSJavaClient
 			payLoad.put(edgeName, tmpEdge);
 		}
 		
+		/**
+		 * edgelabels
+		 */
+		Element edgeLabel = myVertexNode.getChild("edgelabel");
+
+        if (edgeLabel != null)
+        {            
+            String edgeIdentifierElement = edgeLabel.getChild("attribute").getAttributeValue("name");
+                                   
+            if (edgeIdentifierElement != null)
+            {
+            	if("weight".equals(edgeIdentifierElement))
+            	{
+            		return new VertexWeightedEdges(payLoad, edgeLabel.getValue(), edgeLabel.getChild("attribute").getAttributeValue("type"));            		            		
+            	} 
+            	else if("group".equals(edgeIdentifierElement))
+            	{
+            		return new VertexGroup(payLoad, readVertices(edgeLabel.getChild("attribute")));            		            		
+            	} 
+            }
+        }
+            	            	             			
 		return new Vertex(payLoad);
 	}			
 	
