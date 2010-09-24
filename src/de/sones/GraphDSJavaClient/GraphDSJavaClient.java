@@ -22,9 +22,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -78,6 +76,28 @@ public class GraphDSJavaClient
 	
 	public static final int ACCEPT_TYPE_TEXT = 2;
 	
+	/**
+	 * Creates an instance of the client using a given uri and authentication params.
+	 *  	
+	 * @param myUri the URI of the GraphDB Service
+	 * @param myUserName the username for authentication
+	 * @param myPassword the password for authentication
+	 */
+	public GraphDSJavaClient(URI myUri, String myUserName, String myPassword)
+	{
+		this(myUri, myUserName, myPassword, ACCEPT_TYPE_XML);
+	}
+	
+	/**
+	 * Creates an instance of the client using a given uri and authentication params.
+	 * Makes it possible to chose between different accept document types 
+	 * (see GraphDSJavaClient.ACCEPT_TYPE_* constants)
+	 *  	
+	 * @param myUri the URI of the GraphDB Service
+	 * @param myUserName the username for authentication
+	 * @param myPassword the password for authentication
+	 * @param myDocumentType the accept type
+	 */
 	public GraphDSJavaClient(URI myUri, String myUserName, String myPassword, int myDocumentType)
 	{
 		_RestURL = myUri.toString() + "/gql?";
@@ -85,10 +105,18 @@ public class GraphDSJavaClient
 		_UserName = myUserName;
 		_Password = myPassword;		
 		
+		if(myDocumentType == ACCEPT_TYPE_JSON || myDocumentType == ACCEPT_TYPE_TEXT)
+		{
+			throw new IllegalArgumentException("accept type not yet supported...use ACCEPT_TYPE_XML");
+		}
+		
 		//handle argument test
 		_AcceptType = myDocumentType;
 	}
 	
+	/**
+	 * Disconnects the client from the GraphDB Service
+	 */
 	public void disconnect()
 	{
 		if(_Connection != null)
@@ -97,7 +125,15 @@ public class GraphDSJavaClient
 		}
 	}
 	
-	public QueryResult queryXML(String myQuery) throws IOException, JDOMException
+	/**
+	 * Sends a querystring to the GraphDB Service
+	 * 
+	 * @param myQuery the queryResult
+	 * @return <tt>QueryResult</tt> the result of that query
+	 * @throws IOException in case of connection or stream problems
+	 * @throws JDOMException in case of parsing problems
+	 */
+	public QueryResult query(String myQuery) throws IOException, JDOMException
 	{			
 		/**
 		 * retrieve the response string
@@ -109,12 +145,7 @@ public class GraphDSJavaClient
 		 */
 		Document xmlDoc = null;
 										
-		xmlDoc = new SAXBuilder().build(new StringReader(responseString));			
-					
-		if(xmlDoc == null)
-		{
-			return null;
-		}
+		xmlDoc = new SAXBuilder().build(new StringReader(responseString));										
 		
 		/**
 		 * Build query result.
@@ -174,6 +205,13 @@ public class GraphDSJavaClient
 		return new QueryResult(queryVertices, queryWarnings, queryErrors, queryString, queryResult, queryDuration);
 	}
 	
+	/**
+	 * Opens a connection to the GraphDB Service and sends the query.
+	 * 
+	 * @param myQuery the querystring
+	 * @return the response in specified format as String
+	 * @throws IOException
+	 */
 	private String getResponseString(String myQuery) throws IOException 
 	{			
 		/**
@@ -233,7 +271,13 @@ public class GraphDSJavaClient
 		return responseString;
 	}
 
-	private ArrayList<IWarning> readWarnings(Element myWarningsNode)
+	/**
+	 * Method reads all warnings out of the warnings node in the xml response
+	 * 
+	 * @param myWarningsNode
+	 * @return a list of warnings
+	 */
+	private List<IWarning> readWarnings(Element myWarningsNode)
 	{
 		String id 						= null;
 		String message 					= null;	
@@ -261,7 +305,13 @@ public class GraphDSJavaClient
 		return warnings;
 	}
 	
-	private ArrayList<IError> readErrors(Element myErrorsNode)
+	/**
+	 * Method reads all errors out of the errors node in the xml response
+	 * 
+	 * @param myErrorNode
+	 * @return a list of errors
+	 */
+	private List<IError> readErrors(Element myErrorsNode)
 	{
 		String id 						= null;
 		String message 					= null;		
@@ -289,6 +339,12 @@ public class GraphDSJavaClient
 		return errors;
 	}
 
+	/**
+	 * Method reads all results out of the results node in the xml response
+	 * 
+	 * @param myResultsNode
+	 * @return a list of vertices
+	 */
 	private List<IVertex> readVertices(Element myResultsNode)
 	{
 		List<IVertex> vertices = new ArrayList<IVertex>();		
@@ -301,6 +357,13 @@ public class GraphDSJavaClient
 		return vertices;
 	}
 	
+	/**
+	 * Method reads the information of a single vertex
+	 * 
+	 * @param myVertexNode the node-element of a vertex
+	 * 
+	 * @return a Vertex-Instance
+	 */
 	private IVertex readVertex(Element myVertexNode)
 	{						
 		Element tmpNode = null;		
@@ -370,6 +433,15 @@ public class GraphDSJavaClient
 		return new Vertex(payLoad);
 	}			
 	
+	/**
+	 * Method reads the content of the edges in the xml response
+	 * 
+	 * HyperEdges currently not parsed.
+	 * 
+	 * @param myHyperEdgeElement a hyperedge node
+	 * @param myTargetVerticeNodes a list of targetvertex-elements
+	 * @return an Iterable of vertices
+	 */
 	private Iterable<IVertex> generateEdgeContent(Element myHyperEdgeElement, List<?> myTargetVerticeNodes)
 	{
 		List<IVertex> targetVertices = new ArrayList<IVertex>();
@@ -383,6 +455,13 @@ public class GraphDSJavaClient
 		return targetVertices;
 	}
 	
+	/**
+	 * Method parses the basic-types of a vertex attribute
+	 *  
+	 * @param myAttributeType the type as String
+	 * @param myAttributeValue the value of that type as String
+	 * @return an instance of the given type holding the given value
+	 */
 	private Object parseAttribute(String myAttributeType, String myAttributeValue)
 	{
 		if("Double".equals(myAttributeType))

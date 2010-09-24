@@ -17,7 +17,12 @@
 * along with sones GraphDB OSE. If not, see <http://www.gnu.org/licenses/>.
 */
 package de.sones.GraphDSJavaClient.Result;
-
+/**
+ * Enum that specifies the result of a query
+ * 
+ * @author martin
+ *
+ */
 public enum ResultType 
 {
 	Failed,
