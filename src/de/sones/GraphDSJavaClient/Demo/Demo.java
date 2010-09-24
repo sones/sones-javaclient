@@ -30,6 +30,7 @@ import de.sones.GraphDSJavaClient.API.Edge;
 import de.sones.GraphDSJavaClient.API.IVertex;
 import de.sones.GraphDSJavaClient.API.VertexGroup;
 import de.sones.GraphDSJavaClient.API.VertexWeightedEdges;
+import de.sones.GraphDSJavaClient.DataStructures.ObjectRevisionID;
 import de.sones.GraphDSJavaClient.DataStructures.ObjectUUID;
 import de.sones.GraphDSJavaClient.Errors.*;
 import de.sones.GraphDSJavaClient.Result.QueryResult;
@@ -167,6 +168,12 @@ public class Demo
 			result = client.query(
 					"FROM User u SELECT u.Age group by u.Age");
 			printQueryResult(result);
+			
+			/**
+			 * 4) Insert some data
+			 */
+			result = client.query(
+					"INSERT INTO Car VALUES (Color = 'black', HP = 42, Weight = 1337)");
 		}
 		catch(IOException ioEx)
 		{
@@ -210,7 +217,7 @@ public class Demo
 			showVertex(vertex, 1);	
 		}			
 	}
-	
+		
 	private static void showVertex(IVertex myVertex, int depth)
 	{
 		String tabs = "";
@@ -218,6 +225,8 @@ public class Demo
 		
 		Edge tmpEdge;
 		ObjectUUID tmpUUID;
+		ObjectRevisionID objectRevisionID;
+		
 		for(Map.Entry<String, Object> entry : myVertex.getAttributes().entrySet())									
 		{
 			if(entry.getValue() instanceof Edge)
@@ -234,6 +243,11 @@ public class Demo
 				tmpUUID = (ObjectUUID) entry.getValue();				
 				System.out.println(tabs + entry.getKey() + " : " + tmpUUID.toString());
 			}
+			else if(entry.getValue() instanceof ObjectRevisionID)
+			{
+				objectRevisionID = (ObjectRevisionID) entry.getValue();
+				System.out.println(tabs + entry.getKey() + " : " + objectRevisionID.toString());
+			}
 			else
 			{				
 				System.out.println(tabs + entry.getKey() + " : " + entry.getValue());
@@ -247,12 +261,14 @@ public class Demo
 			System.out.println(tabs + "TypeName : " + ((VertexWeightedEdges) myVertex).getTypeName());					
 		}
 		
+		
 		if(myVertex instanceof VertexGroup)
 		{						
 			int count = 0;
 			
 			for(IVertex groupedVertex : ((VertexGroup) myVertex).getGroupedVertices())
 			{
+				groupedVertex.getAttributeCount();
 				count++;
 			}
 			

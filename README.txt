@@ -12,3 +12,6 @@ Missing functionality:
 	
 	GraphDSClient
 		- QueryResultActions
+		
+	ObjectRevisionID
+		- The pattern doesn't exactly parse the timestamp (GraphDB uses C# DateTime.ParseExact()-Method with 7 most significant digits of seconds fraction)

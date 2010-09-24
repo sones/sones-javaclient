@@ -18,10 +18,67 @@
 */
 package de.sones.GraphDSJavaClient.DataStructures;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+/**
+ * An ObjectRevisionID is the identifier for an object revision. 
+ */
 public class ObjectRevisionID 
 {
+	/*
+	 * private members
+	 */
+	
+	private long _TimeStamp;
+	
+	private ObjectUUID _ObjectUUID;	
+	
+	/**
+	 * TODO: find a way to correctly parse the digits of the fraction part
+	 */
+	private static DateFormat _Formatter = new SimpleDateFormat("yyyyddMM.HHmmss.SSSSSSS", Locale.GERMANY);
+	
+	/*
+	 * constructors
+	 */
+	
 	public ObjectRevisionID(String myObjectRevisionID)
 	{
+		String revisionID_Timestamp = myObjectRevisionID.substring(0, myObjectRevisionID.indexOf('('));
+		String revisionID_UUID 		= myObjectRevisionID.substring(
+				revisionID_Timestamp.length() + 1,
+				myObjectRevisionID.length() - 1);				
 		
+		try 
+		{			
+			_TimeStamp = _Formatter.parse(revisionID_Timestamp).getTime();
+		} catch (ParseException e) {
+			
+		}         
+		_ObjectUUID = new ObjectUUID(revisionID_UUID);		
 	}
+
+	/*
+	 * getter / setter
+	 */
+	
+	public long getTimeStamp() 
+	{
+		return _TimeStamp;
+	}	
+
+	public ObjectUUID getObjectUUID() 
+	{
+		return _ObjectUUID;
+	}	
+	
+	@Override
+	public String toString()
+    {		
+		return String.format("%s(%s)", _Formatter.format(new Date(_TimeStamp)), _ObjectUUID.toString());        
+    }
 }
