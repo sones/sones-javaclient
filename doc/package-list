@@ -1,6 +1,4 @@
-de.sones.GraphDSJavaClient
-de.sones.GraphDSJavaClient.API
-de.sones.GraphDSJavaClient.DataStructures
-de.sones.GraphDSJavaClient.Demo
-de.sones.GraphDSJavaClient.Errors
-de.sones.GraphDSJavaClient.Result
+de.sones.GraphDSClient
+de.sones.GraphDSClient.Demo
+de.sones.GraphDSClient.Objects
+de.sones.GraphDSClient.QueryResult
