@@ -1,1 +1,1 @@
-java -jar %~dp1\DemoClient.jar"
+java -jar %~dp0DemoClient.jar"
