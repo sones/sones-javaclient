@@ -9,15 +9,17 @@ For GQL Syntax see documentation at sones Developer-Wiki (http://developers.sone
 
 History:
 
-2011-05-05 (initial release) by Michael Schilonka
+2011-05-18 by Michael Schilonka
 
 	Features
 		- simple connection to a GraphDB REST service based on given URI and credentials
 		- possibility to easily send GQL-Queries to the service
 		- parsing methods to create a QueryResult out of the XML-Response (using JDOM)
 		- API to handle vertices, single- /hyperedges and some result meta data
-		- some demo-queries to see how it works atm
+		- compatibility to refactored output
+		
 		
 	Demo
 		- a simple Demo shows the usage of the current client
+		- cli based output
 		

@@ -22,8 +22,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.io.ObjectInputStream.GetField;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -43,6 +41,8 @@ import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
+import org.xml.sax.SAXException;
+
 import de.sones.GraphDSClient.Objects.BinaryProperty;
 import de.sones.GraphDSClient.Objects.HyperEdge;
 import de.sones.GraphDSClient.Objects.IEdge;
@@ -122,20 +122,27 @@ public class GraphDSClient {
 	 * @return QueryResutlt which contains all information about the result of the query
 	 * @throws IOException
 	 * @throws JDOMException
+	 * @throws SAXException 
 	 */
-	public QueryResult Query(String myGQLString)throws IOException, JDOMException{
+	public QueryResult Query(String myGQLString)throws IOException, JDOMException, SAXException{
 				
 		//fetch xml from the database
 		String responseXML = FetchGraphDBOutput(myGQLString);
+		
 		if(!"".equals(responseXML) && responseXML != null){
-			
+		
+		
 		
 		Document xmlDoc = null;
 		
 		SAXBuilder builder = new SAXBuilder(false);
-		xmlDoc =  builder.build(new StringReader(responseXML));
-		 		  
 		
+		xmlDoc =  builder.build(new StringReader(responseXML));
+		 
+		//add a working validation logic
+        boolean isvalide = false; 
+        
+        
 		 
 		Element result = xmlDoc.getRootElement();
 		Element query = result.getChild("Query",sones);
@@ -152,7 +159,7 @@ public class GraphDSClient {
 		}
 		
 		Element vertexviewlist = result.getChild("VertexViews",sones);
-		return new QueryResult(querystring, language, resulttype, duration, errormessage, ParseVertexViews(vertexviewlist));
+		return new QueryResult(querystring, language, resulttype, duration, errormessage, ParseVertexViews(vertexviewlist), isvalide);
 		}
 		return null;
 	}
