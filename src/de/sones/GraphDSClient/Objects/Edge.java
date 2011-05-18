@@ -18,54 +18,34 @@
 */
 package de.sones.GraphDSClient.Objects;
 
-public class Property {
-	private String id;
-	
-	private String type;
-	
-<<<<<<< HEAD
-	private Object value;
-	
-	
-=======
-	private String value;
-	
-	public String getId() {
-		return id;
-	}
+import java.util.List;
 
->>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
+public class Edge {
+	private List<Vertex> targetVertices;
 	
+	private List<Property> properties;
 	
+	private long countOfProperties;
+
 	/**
 	 * Constructors
 	 */
-<<<<<<< HEAD
-	public Property(String myID, String myType, Object myValue){
-=======
-	public Property(String myID, String myType, String myValue){
->>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
-		id = myID;
-		type = myType;
-		value = myValue;
+	public Edge(List<Vertex> myTargetVertices, List<Property> myProperties, long myCountofProperties){
+		countOfProperties = myCountofProperties;
+		targetVertices = myTargetVertices;
+		properties = myProperties;
 	}
 	
-	public String getType() {
-		return type;
+	public long getCountOfProperties() {
+		return countOfProperties;
 	}
 
-<<<<<<< HEAD
-	public Object getValue() {
-		return value;
+	public List<Vertex> getTargetVertices() {
+		return targetVertices;
+	}
+
+	public List<Property> getProperties() {
+		return properties;
 	}
 	
-	public String getId() {
-		return id;
-	}
-
-=======
-	public String getValue() {
-		return value;
-	}
->>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 }

@@ -22,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+<<<<<<< HEAD
 import java.io.ObjectInputStream.GetField;
 import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
@@ -35,6 +36,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+=======
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+>>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 
 import sun.misc.BASE64Encoder;
 import com.sun.xml.internal.ws.util.ASCIIUtility;
@@ -44,12 +52,18 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
 import de.sones.GraphDSClient.Objects.BinaryProperty;
+<<<<<<< HEAD
 import de.sones.GraphDSClient.Objects.HyperEdge;
 import de.sones.GraphDSClient.Objects.IEdge;
 import de.sones.GraphDSClient.Objects.IHyperEdge;
 import de.sones.GraphDSClient.Objects.ISingleEdge;
 import de.sones.GraphDSClient.Objects.Property;
 import de.sones.GraphDSClient.Objects.SingleEdge;
+=======
+import de.sones.GraphDSClient.Objects.Edge;
+import de.sones.GraphDSClient.Objects.EdgeTupel;
+import de.sones.GraphDSClient.Objects.Property;
+>>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 import de.sones.GraphDSClient.Objects.Vertex;
 import de.sones.GraphDSClient.QueryResult.QueryResult;
 import de.sones.GraphDSClient.QueryResult.ResultType;
@@ -151,8 +165,13 @@ public class GraphDSClient {
 			errormessage = query.getAttributeValue("Error");	
 		}
 		
+<<<<<<< HEAD
 		Element vertexviewlist = result.getChild("VertexViews",sones);
 		return new QueryResult(querystring, language, resulttype, duration, errormessage, ParseVertexViews(vertexviewlist));
+=======
+		Element vertexviewlist = result.getChild("VertexViewList",sones);
+		return new QueryResult(querystring, language, resulttype, duration, errormessage, ParseVertexViewList(vertexviewlist),vertexcount);
+>>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 		}
 		return null;
 	}
@@ -225,12 +244,21 @@ public class GraphDSClient {
 	 * @param myElement The xml node of the VertexViewList
 	 * @return List<Vertex> a list of vertices
 	 */
+<<<<<<< HEAD
 	private List<Vertex> ParseVertexViews(Element myVertexViewList){
+=======
+	private List<Vertex> ParseVertexViewList(Element myVertexViewList){
+		
+>>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 		
 		List<Element> pendingVertices = myVertexViewList.getChildren("VertexView", sones);
 		List<Vertex> verticesList = new ArrayList<Vertex>(pendingVertices.size());
 		for (Element element : pendingVertices) {
+<<<<<<< HEAD
 			verticesList.add(ParseVertexView(element));
+=======
+			verticesList.add(ParseVertex(element));
+>>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 		}
 		
 		
@@ -241,15 +269,23 @@ public class GraphDSClient {
 	 * @param myElement The xml node of the vertex
 	 * @return Vertex
 	 */
+<<<<<<< HEAD
 	private Vertex ParseVertexView(Element myElement) {
 		List<Property> properties = null;
 		List<BinaryProperty> binproper = null;
 		List<IEdge> edges = null;
+=======
+	private Vertex ParseVertex(Element myElement) {
+		List<Property> properties = null;
+		List<BinaryProperty> binproper = null;
+		List<EdgeTupel> edgetupel = null;
+>>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 		
 		properties = ParsePropertyList(myElement.getChild("Properties",sones));
 		
 		binproper = ParseBinaryPropertyList(myElement.getChild("BinaryProperties", sones));
 		
+<<<<<<< HEAD
 		edges = ParseEdge(myElement.getChild("Edges", sones));
 		
 		
@@ -312,13 +348,50 @@ public class GraphDSClient {
 		return new HyperEdge(name,edgeProperties,singleedges);
 	}
 
+=======
+		edgetupel = ParseEdgeTupelList(myElement.getChild("Edges", sones));
+		
+		
+		return new Vertex(properties,binproper,edgetupel);
+	}
+	/**
+	 * Parser for each EdgeTupel
+	 * @param myEdgeTupel The xml node of the edge tupel
+	 * @return List<EdgeTupel> a list of edge tupel
+	 */
+	private List<EdgeTupel> ParseEdgeTupelList(Element myEdgeTupel) {
+		List<Element> pendingEdges = myEdgeTupel.getChildren("ETupleList", sones);
+		List<EdgeTupel> etupellist = new ArrayList<EdgeTupel>(pendingEdges.size());
+		
+		
+		
+		for (Element edgetupel : pendingEdges) {
+			String name = edgetupel.getChildText("Name",sones);
+			List<Element> edge = edgetupel.getChildren("Edge", sones);
+			ArrayList<Edge> edges = new ArrayList<Edge>(edge.size());
+			
+			for (Element element : edge) {
+				Long countOfProperties = Long.parseLong(element.getChildText("CountOfProperties", sones));
+				List<Property> edgeProperties = ParsePropertyList(element.getChild("Properties", sones));
+				List<Vertex> targetVertices = ParseVertexViewList(element.getChild("VertexViewList", sones));
+				edges.add(new Edge(targetVertices, edgeProperties,countOfProperties));
+			}
+			etupellist.add(new EdgeTupel(name, edges));
+		}
+		return etupellist;
+	}
+>>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 	/**
 	 * Parser for each BinaryProperty
 	 * @param myEdgeTupel The xml node of the binary property
 	 * @return List<EdgeTupel> a list of binary property
 	 */	
 	private List<BinaryProperty> ParseBinaryPropertyList(Element myBinaryProperty) {
+<<<<<<< HEAD
 		List<Element> pendingBinProperties = myBinaryProperty.getChildren("BinaryProperty", sones);
+=======
+		List<Element> pendingBinProperties = myBinaryProperty.getChildren("BinaryData", sones);
+>>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 		
 		List<BinaryProperty> payload = new ArrayList<BinaryProperty>(pendingBinProperties.size());
 		for (Element binproperty : pendingBinProperties) {
@@ -334,20 +407,28 @@ public class GraphDSClient {
 	 * @return List<EdgeTupel> a list of property
 	 */
 	private List<Property> ParsePropertyList(Element myProperties) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 		List<Element> pendingProperties = myProperties.getChildren("Property", sones);
 		
 		List<Property> payload  = new ArrayList<Property>(pendingProperties.size());
 		for (Element property : pendingProperties) {
 			String id = property.getChildText("ID", sones);
 			String type = property.getChildText("Type", sones);
+<<<<<<< HEAD
 			Object value = parseAttribute(type,property.getChildText("Value", sones));
+=======
+			String value = property.getChildText("Value", sones);
+>>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 			
 			payload.add(new Property(id, type, value));
 		}
 		return payload;
 	}
 	
+<<<<<<< HEAD
 	
 	
 	/**
@@ -420,4 +501,6 @@ public class GraphDSClient {
 	
 	
 	
+=======
+>>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 }

@@ -26,7 +26,13 @@ public class QueryResult {
 	/**
 	 * private members
 	 */
+<<<<<<< HEAD
 	private List<Vertex> VertexViews;
+=======
+	private List<Vertex> VertexViewList;
+	
+	private long countOfVertices;
+>>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 	
 	private String querystring;
 	
@@ -48,21 +54,39 @@ public class QueryResult {
 	 * @param myVertexViewList
 	 * @param myCountofVertices
 	 */
+<<<<<<< HEAD
 	public QueryResult(String myQueryString, String myQueryLanguage, ResultType myResult, long myDuration, String myErrorMessage, List<Vertex> myVertexViewList){
 		VertexViews = myVertexViewList;
+=======
+	public QueryResult(String myQueryString, String myQueryLanguage, ResultType myResult, long myDuration, String myErrorMessage, List<Vertex> myVertexViewList, long myCountofVertices){
+		VertexViewList = myVertexViewList;
+>>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 		querystring = myQueryString;
 		duration = myDuration;
 		errormessage = myErrorMessage;
 		resulttype = myResult;
 		querylanguage = myQueryLanguage;
+<<<<<<< HEAD
 		
+=======
+		countOfVertices = myCountofVertices;
+>>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 	}
 	
 
 	
+<<<<<<< HEAD
 	
 	public List<Vertex> getVertexViewList() {
 		return VertexViews;
+=======
+	public long getCountOfVertices() {
+		return countOfVertices;
+	}
+	
+	public List<Vertex> getVertexViewList() {
+		return VertexViewList;
+>>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 	}
 
 	public String getQueryString() {

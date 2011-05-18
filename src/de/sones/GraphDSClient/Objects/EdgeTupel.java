@@ -18,54 +18,36 @@
 */
 package de.sones.GraphDSClient.Objects;
 
-public class Property {
-	private String id;
-	
-	private String type;
-	
-<<<<<<< HEAD
-	private Object value;
-	
-	
-=======
-	private String value;
-	
-	public String getId() {
-		return id;
-	}
+import java.util.ArrayList;
+import java.util.List;
 
->>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
+public class EdgeTupel {
 	
+	
+	private String name;
+			
+	private List<Edge> edges;
 	
 	/**
 	 * Constructors
 	 */
-<<<<<<< HEAD
-	public Property(String myID, String myType, Object myValue){
-=======
-	public Property(String myID, String myType, String myValue){
->>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
-		id = myID;
-		type = myType;
-		value = myValue;
+	public EdgeTupel(String myEdgeName,List<Edge> myEdges){
+		this.name = myEdgeName;	
+		this.edges = myEdges;
 	}
 	
-	public String getType() {
-		return type;
-	}
-
-<<<<<<< HEAD
-	public Object getValue() {
-		return value;
+	public EdgeTupel(String myEdgeName, Edge myEdge){
+		name = myEdgeName;	
+		edges = new ArrayList<Edge>(1);
+		edges.add(myEdge);
 	}
 	
-	public String getId() {
-		return id;
+	public String getName() {
+		return name;
 	}
 
-=======
-	public String getValue() {
-		return value;
+	public List<Edge> getEdges(){
+		return edges;
 	}
->>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
+	
 }
