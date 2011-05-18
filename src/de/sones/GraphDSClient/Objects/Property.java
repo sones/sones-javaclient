@@ -23,28 +23,15 @@ public class Property {
 	
 	private String type;
 	
-<<<<<<< HEAD
 	private Object value;
 	
 	
-=======
-	private String value;
-	
-	public String getId() {
-		return id;
-	}
-
->>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 	
 	
 	/**
 	 * Constructors
 	 */
-<<<<<<< HEAD
 	public Property(String myID, String myType, Object myValue){
-=======
-	public Property(String myID, String myType, String myValue){
->>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 		id = myID;
 		type = myType;
 		value = myValue;
@@ -54,7 +41,6 @@ public class Property {
 		return type;
 	}
 
-<<<<<<< HEAD
 	public Object getValue() {
 		return value;
 	}
@@ -63,9 +49,4 @@ public class Property {
 		return id;
 	}
 
-=======
-	public String getValue() {
-		return value;
-	}
->>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 }

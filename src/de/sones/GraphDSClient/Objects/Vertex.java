@@ -19,24 +19,17 @@
 package de.sones.GraphDSClient.Objects;
 
 
-<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Vertex implements IVertex {
-=======
-import java.util.List;
-
-public class Vertex {
->>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 	
 
 	private List<Property> propertyList;
 	
 	private List<BinaryProperty> binaryPropertyList;
 	
-<<<<<<< HEAD
 	private List<IEdge> edges;
 			
 	/**
@@ -51,31 +44,6 @@ public class Vertex {
 	}
 		
 			
-=======
-	private List<EdgeTupel> eTupelList;
-	
-	/**
-	 * Constructors
-	 */
-	public Vertex(List<Property> myPropertyList,List<BinaryProperty> myBinaryPropertyList, List<EdgeTupel> myETupelList){
-		propertyList = myPropertyList;
-		binaryPropertyList = myBinaryPropertyList;
-		eTupelList = myETupelList;
-	}
-		
-	public List<Property> getPropertyList() {
-		return propertyList;
-	}
-
-	public List<BinaryProperty> getBinaryPropertyList() {
-		return binaryPropertyList;
-	}
-
-	public List<EdgeTupel> getETupelList() {
-		return eTupelList;
-	}
-	
->>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 	public Boolean hasProperties(){
 		if(propertyList != null){
 			if(!propertyList.isEmpty()){
@@ -94,7 +62,6 @@ public class Vertex {
 		return -1;
 	}
 	
-<<<<<<< HEAD
 	public Boolean hasEdges(){
 		if(edges != null){
 			if(!edges.isEmpty()){
@@ -126,16 +93,12 @@ public class Vertex {
 
 	
 	public Property getPropertyByID(String myPropertyID) {
-=======
-	public Property getPropertyByID(String myPropertyID){
->>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 		int pos = hasProperty(myPropertyID);
 		if(pos != -1){
 			return propertyList.get(pos);
 		}
 		return null;
 	}
-<<<<<<< HEAD
 
 	
 	public List<Property> getProperties() {
@@ -146,19 +109,12 @@ public class Vertex {
 	public boolean hasEdge(String myEdgeName) {
 		for (IEdge hyperedge : edges) {
 			if(hyperedge.getName().equals(myEdgeName)){
-=======
-	
-	public Boolean hasEdgeTupels(){
-		if(eTupelList != null){
-			if(!eTupelList.isEmpty()){
->>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 				return true;
 			}
 		}
 		return false;
 	}
 
-<<<<<<< HEAD
 	
 	public List<ISingleEdge> getSingleEdges() {
 		List<ISingleEdge> payload = new ArrayList<ISingleEdge>(0);
@@ -193,26 +149,10 @@ public class Vertex {
 			if(hyperedge.getName().equals(myHyperEdgeName)){
 				return hyperedge;
 			}
-=======
-	public int hasEdgeTupel(String myEdgeTupelName){
-		for (EdgeTupel edgetupel : eTupelList) {
-			if(edgetupel.getName().equals(myEdgeTupelName)){
-				return eTupelList.indexOf(edgetupel);
-			}
-		}
-		return -1;
-	}
-
-	public EdgeTupel getEdgeTupelByName(String myEdgeTupelName){
-		int pos = hasEdgeTupel(myEdgeTupelName);
-		if(pos != -1){
-			return eTupelList.get(pos);
->>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 		}
 		return null;
 	}
 
-<<<<<<< HEAD
 	
 	public ISingleEdge getSingleEdge(String mySingleEdgeName) {
 		List<ISingleEdge> payload = getSingleEdges();
@@ -239,34 +179,12 @@ public class Vertex {
 	}
 
 	public BinaryProperty getBinaryPropertyByID(String myBinaryPropertyID) {
-=======
-	public Boolean hasBinaryProperties(){
-		if(binaryPropertyList != null){
-			if(!binaryPropertyList.isEmpty()){
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public int hasBinaryProperty(String myBinaryPropertyID){
-		for (BinaryProperty property : binaryPropertyList) {
-			if(property.getId().equals(myBinaryPropertyID)){
-				return binaryPropertyList.indexOf(property);
-			}
-		}
-		return -1;
-	}
-	
-	public BinaryProperty getBinaryPropertyByID(String myBinaryPropertyID){
->>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 		int pos = hasBinaryProperty(myBinaryPropertyID);
 		if(pos != -1){
 			return binaryPropertyList.get(pos);
 		}
 		return null;
 	}
-<<<<<<< HEAD
 
 
 	public List<BinaryProperty> getBinaryProperties() {
@@ -293,7 +211,5 @@ public class Vertex {
 	}
 
 	
-=======
->>>>>>> f41eead1e4f4cc13df658117099c47b51186a6eb
 	
 }
