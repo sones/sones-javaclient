@@ -25,8 +25,8 @@ import java.util.List;
 
 import de.sones.GraphDSClient.GraphDSClient;
 import de.sones.GraphDSClient.Objects.BinaryProperty;
-import de.sones.GraphDSClient.Objects.Edge;
-import de.sones.GraphDSClient.Objects.EdgeTupel;
+import de.sones.GraphDSClient.Objects.IHyperEdge;
+import de.sones.GraphDSClient.Objects.ISingleEdge;
 import de.sones.GraphDSClient.Objects.Property;
 import de.sones.GraphDSClient.Objects.Vertex;
 import de.sones.GraphDSClient.QueryResult.QueryResult;
@@ -67,7 +67,6 @@ public class GraphDSClientDemo {
 		System.out.println("Duartion: " + myResult.getDuration());
 		System.out.println("ResultType: " + myResult.getResultType().toString());
 		System.out.println("Error: " + myResult.getErrorMessage());
-		System.out.println("Count of fetched Vertices: " + myResult.getCountOfVertices());
 		System.out.println("The fetched Vertices are:\n");
 		
 		List<Vertex> vertexviewlist = myResult.getVertexViewList();
@@ -96,29 +95,39 @@ public class GraphDSClientDemo {
 		}
 		System.out.println(tabs + "\\");
 		System.out.println(tabs + " |- Properties are:");
-		List<Property> properties = myVertex.getPropertyList();
+		List<Property> properties = myVertex.getProperties();
 		for (Property property : properties) {
 			System.out.println(tabs + " |   *" + property.getId() + ": " + property.getValue());
 		}
 		System.out.println(tabs + " |");
-		List<BinaryProperty> binproper = myVertex.getBinaryPropertyList();
+		List<BinaryProperty> binproper = myVertex.getBinaryProperties();
 		System.out.println(tabs + " |- BinaryProperties are:");
 		for (BinaryProperty binaryProperty : binproper) {
-			System.out.println(tabs + "|   *" + binaryProperty.getId() + ": " + binaryProperty.getContent());
+			System.out.println(tabs + " |   *" + binaryProperty.getId() + ": " + binaryProperty.getContent());
 		}
 		System.out.println(tabs + " |");
-		List<EdgeTupel> edgetupels = myVertex.getETupelList();
-		System.out.println(tabs + " |- EdgeTupels are:");
-		for (EdgeTupel edgeTupel : edgetupels) {
-			System.out.println(tabs + "  ->" + edgeTupel.getName()+":");
-			List<Edge> edges = edgeTupel.getEdges();
-			for (Edge edge : edges) {
-				List<Vertex> targetvertex = edge.getTargetVertices();
-				for (Vertex vertex : targetvertex) {
-					printvertex(vertex,targetvertex.indexOf(vertex),depth +2);
-				}
+		List<IHyperEdge> edges = myVertex.getHyperEdges();
+		System.out.println(tabs + " |- Edges are:");
+		
+		for (IHyperEdge edge : edges) {
+			System.out.println(tabs + "     ->" + edge.getName()+":");
+
+
+			properties = edge.getProperties();
+			for (Property property : properties) {
+				System.out.println(tabs + "       \\   " + property.getId() + ": " + property.getValue());
+			}
+			List<ISingleEdge> singleedges = edge.getEdges();
+			for (ISingleEdge singleedge : singleedges) {
+				printvertex((Vertex) singleedge.getTargetVertex(),(long)edges.indexOf(edge),depth + 2);
 			}
 		}
+		List<ISingleEdge> sedges = myVertex.getSingleEdges(); 
+		for (ISingleEdge sedge : sedges) {
+			System.out.println(tabs + "  ->" + sedge.getName()+":");
+			printvertex((Vertex) sedge.getTargetVertex(),sedges.indexOf(sedge),depth + 2);
+		}
+		
 		System.out.println("\n");
 		
 		

@@ -14,19 +14,10 @@ History:
 	Features
 		- simple connection to a GraphDB REST service based on given URI and credentials
 		- possibility to easily send GQL-Queries to the service
-		- parsing methods to create a QueryResult out of the XML-Response (using JDOM (rocks))
-		- API to handle vertices, edges and some result meta data
+		- parsing methods to create a QueryResult out of the XML-Response (using JDOM)
+		- API to handle vertices, single- /hyperedges and some result meta data
 		- some demo-queries to see how it works atm
 		
-	Missing functionality
-		Vertex
-			- anonymous functions
-			- traverse methods
-			- link/unlink
-
-		GraphDSClient
-			- QueryResultActions
-	
-	DemoExmaple
+	Demo
 		- a simple Demo shows the usage of the current client
 		

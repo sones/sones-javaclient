@@ -26,9 +26,7 @@ public class QueryResult {
 	/**
 	 * private members
 	 */
-	private List<Vertex> VertexViewList;
-	
-	private long countOfVertices;
+	private List<Vertex> VertexViews;
 	
 	private String querystring;
 	
@@ -50,24 +48,21 @@ public class QueryResult {
 	 * @param myVertexViewList
 	 * @param myCountofVertices
 	 */
-	public QueryResult(String myQueryString, String myQueryLanguage, ResultType myResult, long myDuration, String myErrorMessage, List<Vertex> myVertexViewList, long myCountofVertices){
-		VertexViewList = myVertexViewList;
+	public QueryResult(String myQueryString, String myQueryLanguage, ResultType myResult, long myDuration, String myErrorMessage, List<Vertex> myVertexViewList){
+		VertexViews = myVertexViewList;
 		querystring = myQueryString;
 		duration = myDuration;
 		errormessage = myErrorMessage;
 		resulttype = myResult;
 		querylanguage = myQueryLanguage;
-		countOfVertices = myCountofVertices;
+		
 	}
 	
 
 	
-	public long getCountOfVertices() {
-		return countOfVertices;
-	}
 	
 	public List<Vertex> getVertexViewList() {
-		return VertexViewList;
+		return VertexViews;
 	}
 
 	public String getQueryString() {

@@ -23,18 +23,15 @@ public class Property {
 	
 	private String type;
 	
-	private String value;
+	private Object value;
 	
-	public String getId() {
-		return id;
-	}
-
+	
 	
 	
 	/**
 	 * Constructors
 	 */
-	public Property(String myID, String myType, String myValue){
+	public Property(String myID, String myType, Object myValue){
 		id = myID;
 		type = myType;
 		value = myValue;
@@ -44,7 +41,12 @@ public class Property {
 		return type;
 	}
 
-	public String getValue() {
+	public Object getValue() {
 		return value;
 	}
+	
+	public String getId() {
+		return id;
+	}
+
 }
