@@ -159,7 +159,7 @@ public class GraphDSClient {
 		}
 		
 		Element vertexviewlist = result.getChild("VertexViews",sones);
-		return new QueryResult(querystring, language, resulttype, duration, errormessage, ParseVertexViews(vertexviewlist), isvalide);
+		return new QueryResult(querystring, language, resulttype, duration, errormessage, ParseVertexViews(vertexviewlist));
 		}
 		return null;
 	}
