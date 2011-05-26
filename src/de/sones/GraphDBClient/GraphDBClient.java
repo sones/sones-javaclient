@@ -187,6 +187,7 @@ public class GraphDBClient {
 		connection.setRequestProperty("Accept", "application/xml");
 		
 		
+		
 		 //set the used credentials
 		String login = username + ":" + password;
 				
@@ -217,7 +218,8 @@ public class GraphDBClient {
 		catch (Exception e) {
 			// TODO: handle exception
 		}
-		
+		//HACK remove Byte Order Mark (BOM) (http://de.wikipedia.org/wiki/Byte_Order_Mark)		
+		responseString = responseString.substring(responseString.indexOf('<'), responseString.length());
 			
 		return responseString;
 		
