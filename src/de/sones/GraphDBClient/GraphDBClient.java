@@ -198,10 +198,10 @@ public class GraphDBClient {
 		//add login information to the request header
 		connection.setRequestProperty("Authorization", "Basic " + encodedlogin);
 		String responseString = "";						
-			
+		BufferedReader in = null;	
 		//Fetch the response stream
 		try{
-		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 		String inputLine;
 		StringBuilder result = new StringBuilder();	
 		
@@ -211,12 +211,19 @@ public class GraphDBClient {
 			
 		}
 		
-		in.close();
+		
+		
 		
 		responseString = result.toString();	
 		}
 		catch (Exception e) {
 			// TODO: handle exception
+		}
+		finally{
+			if(in != null){
+				in.close();
+			}
+			connection.disconnect();
 		}
 		//HACK remove Byte Order Mark (BOM) (http://de.wikipedia.org/wiki/Byte_Order_Mark)		
 		responseString = responseString.substring(responseString.indexOf('<'), responseString.length());
