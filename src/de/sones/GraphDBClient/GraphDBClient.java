@@ -181,7 +181,7 @@ public class GraphDBClient {
 		connection.setRequestMethod("GET");
 		connection.setDoOutput(true);
 		connection.setReadTimeout(10000);
-		
+		connection.setRequestProperty("User-Agent", "Java GraphDBClient");
 		
 		//just xml is supported to parse
 		connection.setRequestProperty("Accept", "application/xml");
