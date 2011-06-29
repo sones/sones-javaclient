@@ -41,7 +41,7 @@ public class GraphDSClientDemo {
 	public static void main(String[] args) throws IOException, Exception {
 		
 		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
-		GraphDBClient client  = new GraphDBClient("192.168.3.132","test","test",9975);
+		GraphDBClient client  = new GraphDBClient("127.0.0.1","test","test",9975);
 		while(true){
 			System.out.print("Type in the GQL: ");
 			String gql = console.readLine();

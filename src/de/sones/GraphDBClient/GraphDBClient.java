@@ -20,6 +20,7 @@
 package de.sones.GraphDBClient;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
@@ -176,10 +177,10 @@ public class GraphDBClient {
 		/**
 		 * Connection settings
 		 */
-		URL url = new URL(restUri + URLEncoder.encode(myQueryString, "UTF-8"));
+		URL url = new URL(restUri);
 					
 		connection = (HttpURLConnection)url.openConnection();
-		connection.setRequestMethod("GET");
+		connection.setRequestMethod("POST");
 		connection.setDoOutput(true);
 		connection.setReadTimeout(10000);
 		connection.setRequestProperty("User-Agent", "Java GraphDBClient");
@@ -198,9 +199,19 @@ public class GraphDBClient {
 		
 		//add login information to the request header
 		connection.setRequestProperty("Authorization", "Basic " + encodedlogin);
+		
+		DataOutputStream outStream = new DataOutputStream(connection.getOutputStream()); 
+		
+		outStream.writeBytes(myQueryString); 
+        outStream.flush(); 
+        outStream.close(); 
+		
 		String responseString = "";						
 		BufferedReader in = null;	
 		//Fetch the response stream
+		
+		
+		
 		try{
 		in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 		String inputLine;
