@@ -36,6 +36,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.DebugGraphics;
+import javax.xml.ws.http.HTTPException;
+
 import sun.misc.BASE64Encoder;
 import com.sun.xml.internal.ws.util.ASCIIUtility;
 import org.jdom.Element;
@@ -73,7 +76,7 @@ public class GraphDBClient {
 	
 	private int port;
 	
-	private String GQLPATTERN = "/gql?";
+	private String GQLPATTERN = "/gql";
 	
 	private String restUri;
 	
@@ -122,11 +125,9 @@ public class GraphDBClient {
 	 * 
 	 * @param myGQLString
 	 * @return QueryResutlt which contains all information about the result of the query
-	 * @throws IOException
-	 * @throws JDOMException
-	 * @throws SAXException 
+	 * @throws Exception 
 	 */
-	public QueryResult Query(String myGQLString)throws IOException, JDOMException, SAXException{
+	public QueryResult Query(String myGQLString)throws Exception{
 				
 		//fetch xml from the database
 		String responseXML = FetchGraphDBOutput(myGQLString);
@@ -170,9 +171,9 @@ public class GraphDBClient {
 	 * Receives the GraphDSREST output
 	 * @param myQueryString the GQL statement
 	 * @return The response string from the REST interface of the GraphDS
-	 * @throws IOException
+	 * @throws Exception 
 	 */
-	private String FetchGraphDBOutput(String myQueryString) throws IOException{
+	private String FetchGraphDBOutput(String myQueryString) throws Exception{
 		
 		/**
 		 * Connection settings
@@ -182,7 +183,8 @@ public class GraphDBClient {
 		connection = (HttpURLConnection)url.openConnection();
 		connection.setRequestMethod("POST");
 		connection.setDoOutput(true);
-		connection.setReadTimeout(10000);
+		connection.setReadTimeout(Integer.MAX_VALUE);
+		
 		connection.setRequestProperty("User-Agent", "Java GraphDBClient");
 		
 		//just xml is supported to parse
@@ -220,16 +222,11 @@ public class GraphDBClient {
 		while((inputLine = in.readLine()) != null)
 		{
 			result.append(inputLine);
-			
 		}
-		
-		
-		
-		
 		responseString = result.toString();	
 		}
 		catch (Exception e) {
-			// TODO: handle exception
+			throw e;
 		}
 		finally{
 			if(in != null){
@@ -237,8 +234,16 @@ public class GraphDBClient {
 			}
 			connection.disconnect();
 		}
-		//HACK remove Byte Order Mark (BOM) (http://de.wikipedia.org/wiki/Byte_Order_Mark)		
-		responseString = responseString.substring(responseString.indexOf('<'), responseString.length());
+		//HACK remove Byte Order Mark (BOM) (http://de.wikipedia.org/wiki/Byte_Order_Mark)	
+		try{
+				responseString = responseString.substring(responseString.indexOf('<'), responseString.length());
+			}
+			
+		catch (Exception ex){
+			throw new Exception("The current request led to an error in GraphDB Server! " + responseString);
+		}
+		
+		
 			
 		return responseString;
 		
